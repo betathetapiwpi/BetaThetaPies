@@ -1,0 +1,27 @@
+@font-face {
+	font-family: 'FrizQuadrata';
+	src: url('fonts/FrizQuadrataTT.eot');
+	src: local('☺'), url('fonts/FrizQuadrataTT.woff') format('woff'), url('fonts/FrizQuadrataTT.ttf') format('truetype'), url('fonts/FrizQuadrataTT.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.jumbotron {
+    background-size: auto 100%;
+}
+.jumbotron h1{
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-family: 'FrizQuadrata', arial
+}
+
+.jumbotron p{
+    color: rgb(171, 35, 40);
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}

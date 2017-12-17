@@ -2,23 +2,11 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+import pytz
 
-
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
-
-    def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+tz = pytz.timezone('US/Eastern')
+class Date(models.Model):
+    delivery_time = models.DateTimeField('Delivery Time')
 
     def __str__(self):
-        return self.question_text
-
-
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.choice_text
+        return self.delivery_time.astimezone(tz).strftime("%a %b %d, %I:%M %p")
