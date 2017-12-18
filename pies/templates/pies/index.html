@@ -105,10 +105,21 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="dateselector">Date and Time</label>
+                    <div class="col-md-4">
+                        <select id="dateselector" name="date" class="form-control">
+                            {% for date in dates %}
+                                    <option value="{{ forloop.counter }}">{{ date|stringformat:"s" }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary col-xs-12 col-md-4 col-md-offset-4" name="venmo-button" onclick="">Purchase</button>
                 </div>
-
             </fieldset>
         </form>
     </body>
