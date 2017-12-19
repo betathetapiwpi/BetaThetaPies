@@ -11,7 +11,6 @@ def index(request):
         day = date.delivery_time.astimezone(timezone('US/Eastern'))
         if date.ordered:
             continue
-        print(day.date())
         if day.date() not in days:
             days[day.date()] = []
         if day.time() not in days[day.date()]:
@@ -20,6 +19,10 @@ def index(request):
     days = {k:v for k, v in days.items() if v!=[]}
     times = {str(k.day):v for k, v in days.items()}
 
-    print(times['25'])
     template = loader.get_template('pies/index.html')
     return HttpResponse(template.render({'dates': days, 'times': times, 'keys': times.keys(), 'length': range(len(times))}, request))
+
+
+def purchase(request):
+    print(request)
+    return HttpResponse("Hi")
