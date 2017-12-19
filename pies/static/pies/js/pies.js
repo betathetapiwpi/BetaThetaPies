@@ -20,7 +20,7 @@ function pay() {
     note = name+','+addr+','+cell+','+toppingsum+','+day+','+time+','+comments
     console.log(note);
     hashed = btoa(note);
-    window.location.href = 'https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO'+hashed+'&amount=10';
+    window.location.href = 'https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO'+hashed+'&amount=.01';
 }
 
 function changeTime(day){
