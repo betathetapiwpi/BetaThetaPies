@@ -1,6 +1,11 @@
+import json
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
 from pies.models import Date
 from pytz import timezone
 
@@ -22,7 +27,10 @@ def index(request):
     template = loader.get_template('pies/index.html')
     return HttpResponse(template.render({'dates': days, 'times': times, 'keys': times.keys(), 'length': range(len(times))}, request))
 
-
+@csrf_exempt
+@require_POST
 def purchase(request):
-    print(request)
-    return HttpResponse("Hi")
+    jsondata = request.body
+    data = json.loads(jsondata)
+    print(data)
+    return HttpResponse(status=200)
