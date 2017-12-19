@@ -107,8 +107,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="dateselector">Date and Time</label>
-                    <div class="col-md-2">
+                    <label class="col-xs-12 col-md-4 control-label" for="dateselector">Date and Time</label>
+                    <div class="col-xs-6 col-md-2">
                         <select id="dateselector" name="date" class="form-control" onchange="changeTime()">
                             {% for day in dates %}
                                     <option value="{{ day.day }}">{{ day|date:"D N j" }}</option>
@@ -116,7 +116,7 @@
                         </select>
                     </div>
                     {% for key, value in times.items %}
-                    <div class="col-md-2" id="{{ key }}" style="display:none">
+                    <div class="col-xs-6 col-md-2" id="{{ key }}" style="display:none">
                         <select name="time" class="form-control">
                                 {% for time in value %}
                                     <option value="{{ forloop.counter0 }}">{{ time|time:"g:i" }}</option>
