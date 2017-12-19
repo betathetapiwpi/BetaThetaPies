@@ -18,7 +18,6 @@ def add_order(order):
     addr = order[1]
     cellnumber = order[2]
     toppings = int(order[3])
-    print(toppings)
     final_toppings = [t for i, t in enumerate(TOPPINGS) if 1<<i & toppings]
     date = int(order[4])
     time = order[5]

@@ -40,8 +40,8 @@ def purchase(request):
     amount = data['data']['amount']
     settled = data['data']['status'] == 'settled'
 
-    #if not note.startswith('BTPOO'):
-    #    return HttpResponse(status=402)
+    if not note.startswith('BTPOO'):
+        return HttpResponse(status=402)
     #if amount < 10 or not settled:
     #    return HttpResponse(status=402)
 
@@ -50,7 +50,6 @@ def purchase(request):
     date = datetime.strptime(day, '%Y %m %d %I:%M%p').astimezone(timezone('US/Eastern'))
 
     for date in Date.objects.filter(delivery_time=date):
-        print(date)
         if not date.ordered:
             date.ordered = True
             date.save()
