@@ -9,10 +9,8 @@ class Date(models.Model):
     delivery_time = models.DateTimeField('Delivery Time')
     ordered = models.BooleanField('Ordered', default=False)
 
-
     def __str__(self):
         return self.delivery_time.astimezone(tz).strftime("%a %b %d, %I:%M %p")
-
 
     def __eq__(self, other):
         return str(self) == str(other)

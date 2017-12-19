@@ -108,17 +108,27 @@
 
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="dateselector">Date and Time</label>
-                    <div class="col-md-4">
-                        <select id="dateselector" name="date" class="form-control">
-                            {% for date in dates %}
-                                    <option value="{{ forloop.counter }}">{{ date|stringformat:"s" }}</option>
+                    <div class="col-md-2">
+                        <select id="dateselector" name="date" class="form-control" onchange="changeTime()">
+                            {% for day in dates %}
+                                    <option value="{{ day.day }}">{{ day|date:"D N j" }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                    {% for key, value in times.items %}
+                    <div class="col-md-2" id="{{ key }}" style="display:none">
+                        <select name="time" class="form-control">
+                                {% for time in value %}
+                                    <option value="{{ forloop.counter0 }}">{{ time|time:"g:i" }}</option>
+                                {% endfor %}
+                        </select>
+                    </div>
+                    {% endfor %}
+
                 </div>
 
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary col-xs-12 col-md-4 col-md-offset-4" name="venmo-button" onclick="">Purchase</button>
+                <div class="form-group ">
+                    <button type="button" class="btn btn-primary col-xs-12 col-md-4 col-md-offset-4 " name="venmo-button ">Purchase</button>
                 </div>
             </fieldset>
         </form>
