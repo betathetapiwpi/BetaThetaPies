@@ -1,4 +1,8 @@
-import json
+import json, base64
+
+from .drive import add_order
+from .models import Date
+from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -32,5 +36,25 @@ def index(request):
 def purchase(request):
     jsondata = request.body
     data = json.loads(jsondata)
-    print(data)
+    note = data['data']['note']
+    amount = data['data']['amount']
+    settled = data['data']['status'] == 'settled'
+
+    #if not note.startswith('BTPOO'):
+    #    return HttpResponse(status=402)
+    #if amount < 10 or not settled:
+    #    return HttpResponse(status=402)
+
+    order = base64.b64decode(note[5:    ]).decode("utf-8").split(',')
+    day = '2018 01 '+ order[4] +' ' + order[5] + 'PM'
+    date = datetime.strptime(day, '%Y %m %d %I:%M%p').astimezone(timezone('US/Eastern'))
+
+    for date in Date.objects.filter(delivery_time=date):
+        print(date)
+        if not date.ordered:
+            date.ordered = True
+            date.save()
+            break
+
+    add_order(order)
     return HttpResponse(status=200)

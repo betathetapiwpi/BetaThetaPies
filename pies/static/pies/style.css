@@ -21,7 +21,6 @@
     word-wrap: break-word;
 }
 
-.col-centered{
-    float: none;
-    margin: 0 auto;
+textarea {
+    resize: none;
 }

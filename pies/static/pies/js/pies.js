@@ -5,12 +5,27 @@ $(document).ready(function(){
 })
 
 function pay() {
-    window.open('https://venmo.com/BetaThetaPi-WPI?txn=pay&note=hello&amount=10', 'Beta Theta Pie Payment');
+    name = $('#name').val();
+    addr = $('#address').val();
+    cell = $('#cellnumber').val();
+    var toppingsum = 0;
+    for(i = 0; i <= 7; i++){
+        if ($('#toppingsinput-'+i).prop('checked')){
+            toppingsum |= 1 << i;
+        }
+    }
+    day = $('#dateselector').val();
+    time = $('#time'+day).find(":selected").text();
+    comments = $('#comments').val()
+    note = name+','+addr+','+cell+','+toppingsum+','+day+','+time+','+comments
+    console.log(note);
+    hashed = btoa(note);
+    window.location.href = 'https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO'+hashed+'&amount=10';
 }
 
 function changeTime(day){
-    $('#' + last).css("display", "none")
-    last = $("#dateselector").val()
-    $('#' + last).css("display", "block")
+    $('#' + last).css("display", "none");
+    last = $("#dateselector").val();
+    $('#' + last).css("display", "block");
 
 }
