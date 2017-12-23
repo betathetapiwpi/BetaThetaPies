@@ -28,7 +28,8 @@
 </div>
 
 <body style="background-color: rgb(171, 202, 233)">
-<form class="form-horizontal" onsubmit="pay(); return false">
+<!-- call pay() in onsubmit to enable orders -->
+<form class="form-horizontal" onsubmit="return false">
     <fieldset>
 
         <!-- Text input-->
@@ -148,8 +149,9 @@
             </div>
         </div>
         <div class="form-group ">
-            <button type="submit" class="btn btn-primary col-xs-12 col-md-4 col-md-offset-4 " name="venmo-button">
-                Purchase
+            <!-- change type to submit to enable orders -->
+            <button type="button" class="btn btn-primary col-xs-12 col-md-4 col-md-offset-4 " name="venmo-button">
+                Pies Will be Available in January
             </button>
         </div>
     </fieldset>
