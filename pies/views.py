@@ -40,18 +40,17 @@ def purchase(request):
     amount = data['data']['amount']
     settled = data['data']['status'] == 'settled'
 
-    if not note.startswith('BTPOO'):
+    if not note.startswith('BTPOO') or not settled or amount < 10:
         return HttpResponse(status=402)
-    #if amount < 10 or not settled:
-    #    return HttpResponse(status=402)
 
-    order = base64.b64decode(note[5:    ]).decode("utf-8").split(',')
+    order = note[5:].split(',')
     day = '2018 01 '+ order[4] +' ' + order[5] + 'PM'
     date = datetime.strptime(day, '%Y %m %d %I:%M%p').astimezone(timezone('US/Eastern'))
 
     for date in Date.objects.filter(delivery_time=date):
         if not date.ordered:
             date.ordered = True
+            date.name = note[0]
             date.save()
             break
 
