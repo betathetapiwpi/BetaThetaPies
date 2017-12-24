@@ -5,8 +5,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 scope = ['https://spreadsheets.google.com/feeds']
 
-jsondata = {"client_email": os.environ.get("CLIENT_EMAIL"), "private_key": os.environ.get("PRIVATE_KEY"), "client_id": os.environ.get("CLIENT_ID"), "private_key_id": os.environ.get("PRIVATE_KEY_ID"), "type": "service_account"}
-credentials = ServiceAccountCredentials.from_json_keyfile_name('pies/Beta Theta Pies-c8fd724d2eee.json', scope)
+jsondata = {"client_email": os.environ.get("client_email"), "private_key": os.environ.get("private_key"), "client_id": os.environ.get("client_id"), "private_key_id": os.environ.get("private_key_id"), "type": "service_account"}
+credentials = ServiceAccountCredentials._from_parsed_json_keyfile(jsondata, scope)
 
 gc = gspread.authorize(credentials)
 
