@@ -41,6 +41,7 @@ def purchase(request):
     settled = data['data']['status'] == 'settled'
 
     if not note.startswith('BTPOO') or not settled or amount < 10:
+        print("either not settled. or too little ammount")
         return HttpResponse(status=402)
 
     order = note[5:].split(',')
