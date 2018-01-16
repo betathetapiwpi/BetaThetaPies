@@ -51,7 +51,7 @@ def purchase(request):
     for date in Date.objects.filter(delivery_time=date):
         if not date.ordered:
             date.ordered = True
-            date.name = note[0]
+            date.name = order[0]
             date.save()
             break
 
