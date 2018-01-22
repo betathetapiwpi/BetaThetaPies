@@ -44,7 +44,7 @@ def purchase(request):
         print("not a pies order")
         return HttpResponse(status=200)
 
-    if not settled or amount < .010:
+    if not settled or amount < 10:
         print("either not settled. or too little amount")
         return HttpResponse(status=402)
 
