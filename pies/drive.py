@@ -18,6 +18,8 @@ TOPPINGS = ['Sauce', 'Cheese', 'Pepperoni', 'Mushrooms', 'Bacon', 'Onion', 'Saus
 
 
 def add_order(order):
+    gc = gspread.authorize(credentials)
+    wks = gc.open_by_key('1LskHuzVfUyxahsPzCRteXmkpawZZ2wSnJcxqHuRWDZw').sheet1
     name = order[0]
     addr = order[1]
     cellnumber = order[2]
