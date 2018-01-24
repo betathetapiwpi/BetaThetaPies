@@ -1,17 +1,15 @@
-import json, base64
-
-from .drive import add_order
-from .models import Date
+import json
 from datetime import datetime
 
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from pytz import timezone
 
 from pies.models import Date
-from pytz import timezone
+from .drive import add_order
+
 
 def index(request):
     days = {}
@@ -25,11 +23,13 @@ def index(request):
         if day.time() not in days[day.date()]:
             days[day.date()].append(day.time())
 
-    days = {k:v for k, v in days.items() if v!=[]}
-    times = {str(k.day):v for k, v in days.items()}
+    days = {k: v for k, v in days.items() if v != []}
+    times = {str(k.day): v for k, v in days.items()}
 
     template = loader.get_template('pies/index.html')
-    return HttpResponse(template.render({'dates': days, 'times': times, 'keys': times.keys(), 'length': range(len(times))}, request))
+    return HttpResponse(
+        template.render({'dates': days, 'times': times, 'keys': times.keys(), 'length': range(len(times))}, request))
+
 
 @csrf_exempt
 @require_POST
@@ -49,15 +49,16 @@ def purchase(request):
         return HttpResponse(status=402)
 
     order = note[5:].split(',')
-    day = '2018 01 '+ order[4] +' ' + order[5] + 'PM'
+    day = '2018 01 ' + order[4] + ' ' + order[5] + 'PM'
     date = datetime.strptime(day, '%Y %m %d %I:%M%p').astimezone(timezone('US/Eastern'))
 
     for date in Date.objects.filter(delivery_time=date):
         if not date.ordered:
             date.ordered = True
-            date.name = order[0]
             date.save()
             break
+    else:
+        print("BIG ERROR THERES AN OVERBOOK")
 
     add_order(order)
     return HttpResponse(status=200)
