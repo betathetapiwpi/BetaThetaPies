@@ -54,5 +54,5 @@ def add_order(order):
             wks.update_cell(row, 8, notes)
             wks.update_cell(row, 9, 'Venmo')
 
-            print("SUCCESSFULLY ORDERED")
+            print("SUCCESSFULLY ORDERED", name)
             return
