@@ -13,7 +13,6 @@ from .drive import add_order
 
 def index(request):
     days = {}
-    times = {}
     for date in Date.objects.all():
         day = date.delivery_time.astimezone(timezone('US/Eastern'))
         if date.ordered:
