@@ -53,10 +53,8 @@ def purchase(request):
     date = datetime.strptime(day, '%Y %m %d %I:%M%p').astimezone(timezone('US/Eastern'))
 
     for date in Date.objects.filter(delivery_time=date):
-        if not date.ordered:
-            date.ordered = True
-            date.save()
-            break
+        date.delete()
+        break
     else:
         print("BIG ERROR THERES AN OVERBOOK")
 
