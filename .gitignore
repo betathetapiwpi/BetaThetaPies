@@ -4,3 +4,4 @@ __pycache__/
 pies/migrations
 generatedatabase.py
 BetaThetaPies/staticfiles/
+payments.json
