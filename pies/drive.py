@@ -37,6 +37,8 @@ def add_order(order):
                 row = 82
                 while wks.cell(row, 4).value != '':
                     row += 1
+                wks.uodate_cell(row, 1, date)
+                wks.uodate_cell(row, 3, time)
                 wks.update_cell(row, 4, name)
                 wks.update_cell(row, 5, cellnumber)
                 wks.update_cell(row, 6, addr)
