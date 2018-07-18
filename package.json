@@ -1,0 +1,22 @@
+{
+  "name": "betathetapies",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "description": "",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinters007/BetaThetaPies.git"
+  },
+  "author": "Tim Winters",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/twinters007/BetaThetaPies/issues"
+  },
+  "homepage": "https://github.com/twinters007/BetaThetaPies#readme"
+}
