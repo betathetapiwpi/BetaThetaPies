@@ -5,8 +5,10 @@
     "node": "8.9.1"
   },
   "dependencies": {
+    "edit-google-spreadsheet": "^0.3.0",
     "ejs": "^2.5.6",
     "express": "^4.16.3",
+    "googleapis": "^27.0.0",
     "pg": "^7.4.1"
   },
   "description": "",
