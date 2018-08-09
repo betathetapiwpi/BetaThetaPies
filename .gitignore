@@ -5,3 +5,6 @@ pies/migrations
 generatedatabase.py
 BetaThetaPies/staticfiles/
 payments.json
+credentials.json
+token.json
+node_modules/
