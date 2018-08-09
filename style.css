@@ -20,12 +20,13 @@ html, body {
 .jumbotron {
     background-size: auto 100%;
     background-color: rgb(249, 159, 201);
+    text-align: center;
 
 }
 
 .jumbotron .container {
     display: inline-flex;
-    justify-content: space-around;
+    justify-content: center;
     align-content: center;
 }
 
@@ -51,7 +52,6 @@ html, body {
 }
 
 .jumbotron img{
-    max-height: 100%;
     flex: 1;
 }
 
@@ -62,7 +62,7 @@ html, body {
 }
 
 .vertically-stacked > * {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
 
 
