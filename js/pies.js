@@ -52,7 +52,7 @@ $(document).ready(function(){
 
     $('.toppingsIcon').click(function () {
         $('img', this).toggleClass('deselected');
-        $('#'+(this.id.split('-')[0])).toggle();
+        $('#'+(this.id.split('-')[0])).fadeToggle(1000);
     })
 });
 

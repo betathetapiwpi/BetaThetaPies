@@ -56,12 +56,11 @@ html, body {
 }
 
 .jumbotron img{
+    display: none;
     flex: 1;
 }
 
 @media screen and (max-width: 576px){ /* xtra small screens */
-
-
     #pizza {
         float: none
     }
@@ -73,11 +72,8 @@ html, body {
         height: 100%;
     }
 
-
-
-
 }
-@media screen and (max-width: 768px){ /* small screens */
+@media screen and (min-width: 576px){ /* small screens */
     #pizza{
         float: left
     }
@@ -92,7 +88,7 @@ html, body {
 }
 
 
-@media screen and (max-width: 992px){ /* medium screens */
+@media screen and (min-width: 768px){ /* medium screens */
     .jumbotron img {
         display: inline;
     }
@@ -110,6 +106,10 @@ html, body {
 }
 
 @media screen and (min-width: 992px){
+    .jumbotron img {
+        display: inline;
+    }
+
     .icons > *{
       padding: 2%;
     }
@@ -187,8 +187,16 @@ html, body {
 }
 
 .icons img {
+    cursor: pointer;
     width: 100%;
 
+}
+
+#crust img{
+    transition: all 1s ease;
+}
+#toppings img{
+    transition: all 1s ease;
 }
 
 #toppings .deselected{
