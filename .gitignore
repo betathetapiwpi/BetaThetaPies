@@ -8,3 +8,4 @@ payments.json
 credentials.json
 token.json
 node_modules/
+bower_components/

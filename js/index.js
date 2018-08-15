@@ -1,56 +1,61 @@
 const express = require('express');
-const fs = require('fs');
-const request = require('request');
-const readline = require('readline');
 const {google} = require('googleapis');
+const moment = require('moment');
 
 var app = express();
-
-const PORT = process.env.PORT || 8000;
-
 app.use(express.static(__dirname + '/../'));
 
-app.get('/', function (req, res) {
-    res.render('/index.html');
-});
+const PORT = process.env.PORT || 80;
+
+
 
 const {client_secret, client_id, redirect_uris} = JSON.parse(process.env.gapi_credentials).installed;
 const oAuth2Client = new google.auth.OAuth2(
     client_id, client_secret, redirect_uris[0]);
 oAuth2Client.setCredentials(JSON.parse(process.env.gapi_token));
-
+console.log(oAuth2Client.credentials);
 google.options({
     auth: oAuth2Client
 });
 
 oAuth2Client.on('tokens', (tokens) => {
+    let refresh_token = oAuth2Client.credentials.refresh_token;
     oAuth2Client.setCredentials(tokens);
+    oAuth2Client.setCredentials({refresh_token: refresh_token});
 });
 oAuth2Client.refreshAccessToken();
 
-/**
- * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- */
-function getSheet(){
-    const sheets = google.sheets({version: 'v4', oAuth2Client});
+const sheets = google.sheets({version: 'v4', auth: oAuth2Client});
+
+app.get('/', function (req, res) {
+    res.render('/index.html');
+});
+
+app.get('/times', function (req, res){
+    console.log("Times requested");
     sheets.spreadsheets.values.get({
         spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
-        range: 'C2:C81',
-    }, (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err);
-        const rows = res.data.values;
-        if (rows.length) {
-            // Print columns A and E, which correspond to indices 0 and 4.
-            rows.map((row) => {
-                console.log(`${row}`);
-            });
-        } else {
-            console.log('No data found.');
+        range: 'A2:I81'
+    }, (err, data) => {
+        if (err){console.log("error"); console.log(err); return;}
+        const rows = data.data.values;
+        const dateSet = new Set();
+        if (rows.length){
+            for(let i = 0; i < rows.length; i+=27){
+                for(let j = 0; j < 26; j+=2){
+                    time = rows[i+j][2];
+                    if(rows[i+j][3] !== ''){
+                        if(rows[i+j+1][3] !== '' && rows[i+j+1][3] !== undefined){
+                            continue;
+                        }
+                    }
+                    dateSet.add(rows[i+j][0]+' '+time);
+                }
+            }
         }
+        res.send(JSON.stringify(Array.from(dateSet)));
     });
-}
+});
 
 app.post('/payments/api', function(req, res){
     data = JSON.parse(req.body);
@@ -60,8 +65,7 @@ app.post('/payments/api', function(req, res){
 
     if (!note.startswith('BTPOO')){
         console.log("Not a BTPies Order");
-        res.status(200);
-        res.send();
+        res.sendStatus(200);
     }
 
     if (!settled || amount < 10 && data.data.actor.username !== 'Tim-Winters-007') {
@@ -79,7 +83,6 @@ app.post('/payments/api', function(req, res){
     res.status(200);
     res.send();
 });
-
 function add_order(order){
     const name = order[0];
     const addr = order[1];
@@ -89,7 +92,6 @@ function add_order(order){
     const time = order[5];
     const notes = order[6];
 
-    const sheets = google.sheets({version: 'v4', oAuth2Client});
     sheets.spreadsheets.values.get({
         spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
         range: 'A2:I81',
@@ -101,11 +103,9 @@ function add_order(order){
         const rows = res.data.values;
         if (rows.length){
             for(let i = 0; i < rows.length; i++){
-                console.log(typeof rows[i][0]);
                 if (rows[i][0].includes(date)){
                     for(let j = 0; j < 26; j+=2){
                         if (rows[i+j][2].includes(time)){
-                            console.log(rows[i+j]);
                             if(rows[i+j][3] !== ''){j++;}
                             if(rows[i+j][3] !== ''){console.log("Overbook", order); return;}
                             sheets.spreadsheets.values.update({
@@ -124,10 +124,5 @@ function add_order(order){
     });
 }
 
-app.get('/test', function(req, res){
-    console.log(req.originalUrl);
-    res.send("Hello");
-    getSheet();
-});
-
+console.log("Ready");
 app.listen(PORT);

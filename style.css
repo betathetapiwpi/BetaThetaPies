@@ -1,15 +1,15 @@
 @font-face {
-	font-family: 'FrizQuadrata';
-	src: url('fonts/FrizQuadrataTT.eot');
-	src: local('☺'), url('fonts/FrizQuadrataTT.woff') format('woff'), url('fonts/FrizQuadrataTT.ttf') format('truetype'), url('fonts/FrizQuadrataTT.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'FrizQuadrata';
+    src: url('fonts/FrizQuadrataTT.eot');
+    src: local('☺'), url('fonts/FrizQuadrataTT.woff') format('woff'), url('fonts/FrizQuadrataTT.ttf') format('truetype'), url('fonts/FrizQuadrataTT.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /*@media (max-width: 1500px) {*/
-    /*#orderform {*/
-        /*margin: 0 10px;*/
-    /*}*/
+/*#orderform {*/
+/*margin: 0 10px;*/
+/*}*/
 /*}*/
 
 html, body {
@@ -17,11 +17,15 @@ html, body {
     overflow-x: hidden;
 }
 
+.control-label {
+    font-weight:bold;
+}
+
 .jumbotron {
     background-size: auto 100%;
     background-color: rgb(249, 159, 201);
     text-align: center;
-
+    max-height: 400px;
 }
 
 .jumbotron .container {
@@ -55,6 +59,64 @@ html, body {
     flex: 1;
 }
 
+@media screen and (max-width: 576px){ /* xtra small screens */
+
+
+    #pizza {
+        float: none
+    }
+    #toppings {
+        justify-content: center;
+        max-height: 20vh;
+    }
+    #toppings {
+        height: 100%;
+    }
+
+
+
+
+}
+@media screen and (max-width: 768px){ /* small screens */
+    #pizza{
+        float: left
+    }
+
+    #toppings{
+        padding-top: 5%;
+        height: 100%;
+    }
+    #toppings img {
+        height: 75%;
+    }
+}
+
+
+@media screen and (max-width: 992px){ /* medium screens */
+    .jumbotron img {
+        display: inline;
+    }
+    #pizza{
+        float: left
+    }
+
+    #toppings{
+        padding-top: 5%;
+        height: 100%;
+    }
+    #toppings img {
+        height: 75%;
+    }
+}
+
+@media screen and (min-width: 992px){
+    .icons > *{
+      padding: 2%;
+    }
+}
+
+
+
 .vertically-stacked {
     flex: 2;
     vertical-align: middle;
@@ -65,7 +127,79 @@ html, body {
     margin-bottom: 25px;
 }
 
+#orderform {
+    padding: 10px;
+    margin-bottom: 50px;
+}
+
+#crust {
+    position: relative;
+    padding-top: 7.5%;
+    padding-left: 7.5%;
+    padding-bottom: 92.5%;
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    background-color: burlywood;
+    vertical-align: middle;
+    text-align: center;
+}
+#sauce {
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    background-color: #710909;
+    position: absolute;
+    z-index: auto
+}
+
+#cheese {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 1;
+}
+
+#pepperoni {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 2;
+
+}
+#mushroom {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 3;
+}
+
+#bacon {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 3;
+}
+
+.icons > *{
+    text-align: center;
+}
+
+.icons img {
+    width: 100%;
+
+}
+
+#toppings .deselected{
+    filter: grayscale(100%);
+}
+
+.begone-thot {
+    display: none;
+}
 
 textarea {
     resize: none;
 }
+

@@ -1,0 +1,20 @@
+{
+  "name": "betathetapies",
+  "description": "",
+  "main": "js/index.js",
+  "authors": [
+    "Tim Winters"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/twinters007/BetaThetaPies",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pickadate": "^3.5.6"
+  }
+}
