@@ -53,18 +53,14 @@
     <div class="form-group">
         <label class="control-label" for="name">Name</label>
         <div>
-            <input id="name" type="text" placeholder="John Reily Knox" class="form-control input-md"
-                   pattern="[A-z]+\s[A-z]+.*"
-                   oninvalid="this.setCustomValidity('Enter both your first and last name')"
-                   oninput="setCustomValidity('')" required>
+            <input id="name" type="text" placeholder="John Reily Knox" class="form-control input-md" required>
         </div>
     </div>
     <!-- Address -->
     <div class="form-group">
         <label class="control-label" for="address">Delivery Location</label>
         <div>
-            <input id="address" type="text" class="form-control input-md" placeholder="1200 Park Ave, Emeryville, CA"
-                   required>
+            <input id="address" type="text" class="form-control input-md" placeholder="1200 Park Ave, Emeryville, CA" required>
         </div>
     </div>
 
@@ -78,12 +74,13 @@
                    oninput="setCustomValidity('')" required>
         </div>
     </div>
+    <!-- Pizza Maker -->
     <div class="form-group">
         <div class="row" id="pizzamaker">
             <div class="col-md-6 col-12" id="pizza">
                 <div id="crust">
                     <div id="sauce"></div>
-                    <div id="cheese" style="">
+                    <div id="cheese">
                         <img src="assets/cheese.svg">
                     </div>
                     <div id="pepperoni" style="display: none">
@@ -93,13 +90,16 @@
                         <img src="assets/bacon.svg">
                     </div>
                     <div id="sausage" style="display: none">
+                        <img src="assets/sausage.svg">
                     </div>
                     <div id="mushroom" style="display: none">
                         <img src="assets/mushroom.svg">
                     </div>
                     <div id="onion" style="display: none">
+                        <img src="assets/onion.svg">
                     </div>
-                    <div id="green-pepper" style="display: none">
+                    <div id="greenpepper" style="display: none">
+                        <img src="assets/green-peppers.svg">
                     </div>
                 </div>
             </div>
@@ -118,13 +118,13 @@
                         <img src="assets/bacon-icon.svg" class="deselected">
                     </div>
                     <div class="col-3 col-md-4 toppingsIcon" id="onion-icon">
-                        <img src="assets/pepperoni-icon.svg" class="deselected">
+                        <img src="assets/onion-icon.svg" class="deselected">
                     </div>
                     <div class="col-3 col-md-4 toppingsIcon" id="greenpepper-icon">
-                        <img src="assets/pepperoni-icon.svg" class="deselected">
+                        <img src="assets/green-pepper-icon.svg" class="deselected">
                     </div>
                     <div class="col-3 col-md-4 toppingsIcon" id="sausage-icon">
-                        <img src="assets/pepperoni-icon.svg" class="deselected">
+                        <img src="assets/sausage-icon.svg" class="deselected">
                     </div>
                     <div class="col-3 col-md-4 toppingsIcon" id="mushroom-icon">
                         <img src="assets/mushroom-icon.svg" class="deselected">
@@ -134,7 +134,7 @@
             </div>
         </div>
     </div>
-
+    <!-- Date and Time -->
     <div class="form-group row">
         <div class="col-md-6 col-6">
             <label for="datepicker" class="control-label">Date</label>
@@ -146,13 +146,15 @@
         </div>
     </div>
 
-
+    <!-- Warning -->
     <div class="form-group">
         <div class="alert alert-info">
             <strong>Heads Up!</strong> Due to the way our pie making process works if you would like more than
             one pie you need a separate order for each pie
         </div>
     </div>
+
+    <!-- Comment Box -->
     <div class="form-group">
         <label class="control-label" for="comments">Comments</label>
         <div>
@@ -160,44 +162,14 @@
                           class="form-control input-md"></textarea>
         </div>
     </div>
+
     <!-- change type to submit to enable orders -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary col-md-12 col-12" name="venmo-button"
-                style="overflow-wrap: break-spaces">
+        <button class="btn btn-primary col-md-12 col-12 venmo-button">
             Complete Order with Venmo Payment of $10
         </button>
     </div>
 
 </form>
 </body>
-
 </html>
-
-<!--<div class="btn-group col-12 col-md-6">-->
-<!--<button class="btn toppingButton" type="button" id="sauce-icon">-->
-<!--<img src="assets/sauce-icon.svg">-->
-<!--</button>-->
-<!--<button class="btn toppingButton" type="button" id="pepperoni-icon">-->
-<!--<img src="assets/pepperoni-icon.svg" class="img-responsive deselected">-->
-<!--</button>-->
-<!--<button class="btn toppingButton" type="button" id="bacon-icon">-->
-<!--<img src="assets/bacon-icon.svg" class="img-responsive deselected">-->
-<!--</button>-->
-<!--<button class="btn toppingButton" type="button" id="sausage-icon">-->
-<!--<img src="assets/pepperoni-icon.svg" class="img-responsive deselected">-->
-<!--</button>-->
-<!--</div>-->
-<!--<div class="btn-group col-12 col-md-6">-->
-<!--<button class="btn toppingButton" type="button" id="cheese-icon">-->
-<!--<img src="assets/cheese-icon.svg" class="img-responsive">-->
-<!--</button>-->
-<!--<button class="btn toppingButton" type="button" id="onion-icon">-->
-<!--<img src="assets/bacon-icon.svg" class="img-responsive deselected">-->
-<!--</button>-->
-<!--<button class="btn toppingButton" type="button" id="green-pepper-icon">-->
-<!--<img src="assets/pepperoni-icon.svg" class="img-responsive deselected">-->
-<!--</button>-->
-<!--<button class="btn toppingButton" type="button" id="mushroom-icon">-->
-<!--<img src="assets/mushroom-icon.svg" class="img-responsive deselected">-->
-<!--</button>-->
-<!--</div>-->

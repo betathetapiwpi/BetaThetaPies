@@ -181,6 +181,25 @@ html, body {
     height: 85%;
     z-index: 3;
 }
+#sausage {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 3;
+}
+#greenpepper {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 3;
+}
+#onion {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    z-index: 3;
+}
+
 
 .icons > *{
     text-align: center;
@@ -203,11 +222,15 @@ html, body {
     filter: grayscale(100%);
 }
 
-.begone-thot {
-    display: none;
-}
-
 textarea {
     resize: none;
 }
 
+.venmo-button{
+    overflow-wrap: break-spaces;
+    height: 4em;
+}
+
+.alert {
+    text-align: center;
+}
