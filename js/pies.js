@@ -32,6 +32,7 @@ $(document).ready(function(){
                 max: dates[dates.length - 1],
                 disable: dates,
                 formatSubmit: "m/d/yyyy",
+                hiddenName: true,
                 format: "mmm d",
                 onSet: function(thingset){
                     timepicker.set('disable', false);
@@ -61,25 +62,22 @@ function pay() {
     const addr = $('#address').val().replace(',', ' ');
     const cell = $('#cellnumber').val();
     let toppings = "";
-    for(let i = 0; i <= 7; i++){
-        if ($('#toppingsinput-'+i).prop('checked')){
-            toppings += $('#toppingsinput-'+i).attr('value')+'/'
+    $('#crust').children().each((i) => {
+        console.log(this.id);
+        if ($(this).is(":visible")){
+            toppings+=this.id+"/";
         }
-    }
+    });
+
     const toppingsum = toppings.slice(0,-1);
-    const day = $('#dateselector').val();
-    const time = $('#time'+day).find(":selected").text();
+    const day = $('#datepicker').pickadate('picker').get('value', 'd/m/yyyy');
+    const time = $('#timepicker').pickatime('picker').get('value', 'H:i');
     const comments = $('#comments').val().replace(',', ' ');
     const note = name+','+addr+','+cell+','+toppingsum+','+day+','+time+','+comments;
+    console.log(note);
     window.open('https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO'+note+'&amount=10', '_blank');
 }
 
-function changeTime(){
-    $('#' + last).css("display", "none");
-    last = $("#dateselector").val();
-    $('#' + last).css("display", "block");
-
-}
 
 // function random(){
 //     rand = Math.floor(Math.random() * 252) + 3;

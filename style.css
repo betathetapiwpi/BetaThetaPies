@@ -25,7 +25,6 @@ html, body {
     background-size: auto 100%;
     background-color: rgb(249, 159, 201);
     text-align: center;
-    max-height: 400px;
 }
 
 .jumbotron .container {
@@ -56,8 +55,21 @@ html, body {
 }
 
 .jumbotron img{
+    max-height: 200px;
+
     display: none;
     flex: 1;
+}
+
+
+.vertically-stacked {
+    flex: 3;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.vertically-stacked > * {
+    margin-bottom: 25px;
 }
 
 @media screen and (max-width: 576px){ /* xtra small screens */
@@ -79,8 +91,9 @@ html, body {
     }
 
     #toppings{
-        padding-top: 5%;
+        /*! padding-top: 5%; */
         height: 100%;
+        vertical-align: middle;
     }
     #toppings img {
         height: 75%;
@@ -89,15 +102,12 @@ html, body {
 
 
 @media screen and (min-width: 768px){ /* medium screens */
-    .jumbotron img {
-        display: inline;
-    }
     #pizza{
         float: left
     }
 
     #toppings{
-        padding-top: 5%;
+        /*! padding-top: 5%; */
         height: 100%;
     }
     #toppings img {
@@ -110,22 +120,11 @@ html, body {
         display: inline;
     }
 
-    .icons > *{
-      padding: 2%;
-    }
 }
 
 
 
-.vertically-stacked {
-    flex: 2;
-    vertical-align: middle;
-    text-align: center;
-}
 
-.vertically-stacked > * {
-    margin-bottom: 25px;
-}
 
 #orderform {
     padding: 10px;
@@ -226,6 +225,9 @@ textarea {
     resize: none;
 }
 
+.icons img {
+    display: block;
+}
 .venmo-button{
     overflow-wrap: break-spaces;
     height: 4em;
