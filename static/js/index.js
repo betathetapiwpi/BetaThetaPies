@@ -1,11 +1,24 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const {google} = require('googleapis');
 const moment = require('moment');
 
 var app = express();
-app.use(express.static(__dirname + '/../'));
+app.use(express.static('static'));
+app.use(function(req, res, next) {
+    if ((req.get('X-Forwarded-Proto') !== 'https')) {
+        res.redirect('https://' + req.get('Host') + req.url);
+    } else
+        next();
+});
 
-const PORT = process.env.PORT || 80;
+const options = {
+    cert: fs.readFileSync('./fullchain.pem'),
+    key: fs.readFileSync('./privkey.pem')
+};
+
+const PORT = process.env.PORT || 8000;
 
 
 
@@ -28,11 +41,10 @@ oAuth2Client.refreshAccessToken();
 const sheets = google.sheets({version: 'v4', auth: oAuth2Client});
 
 app.get('/', function (req, res) {
-    res.render('/index.html');
+    res.render('index.html');
 });
-
 app.get('/times', function (req, res){
-    console.log("Times requested");
+    console.log('times requested');
     sheets.spreadsheets.values.get({
         spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
         range: 'A2:I81'
@@ -127,3 +139,4 @@ function add_order(order){
 
 console.log("Ready");
 app.listen(PORT);
+https.createServer(options, app).listen(8443);

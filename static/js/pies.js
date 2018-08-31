@@ -62,19 +62,21 @@ function pay() {
     const addr = $('#address').val().replace(',', ' ');
     const cell = $('#cellnumber').val();
     let toppings = "";
-    $('#crust').children().each((i) => {
-        console.log(this.id);
-        if ($(this).is(":visible")){
-            toppings+=this.id+"/";
+    $('#crust').children().each((idx, itm) => {
+        if ($(itm).is(":visible")){
+            toppings+=itm.id+"/";
         }
     });
 
     const toppingsum = toppings.slice(0,-1);
     const day = $('#datepicker').pickadate('picker').get('value', 'd/m/yyyy');
     const time = $('#timepicker').pickatime('picker').get('value', 'H:i');
+    if (time === "" || time === undefined){
+        $('#timepicker')[0].setCustomValidity("Please select a time");
+        return false;
+    }
     const comments = $('#comments').val().replace(',', ' ');
     const note = name+','+addr+','+cell+','+toppingsum+','+day+','+time+','+comments;
-    console.log(note);
     window.open('https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO'+note+'&amount=10', '_blank');
 }
 

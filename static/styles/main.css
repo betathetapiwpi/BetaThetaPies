@@ -188,8 +188,8 @@ html, body {
 }
 #greenpepper {
     position: absolute;
-    width: 85%;
-    height: 85%;
+    width: 80%;
+    height: 80%;
     z-index: 3;
 }
 #onion {
