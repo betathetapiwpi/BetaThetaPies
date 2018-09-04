@@ -1,12 +1,14 @@
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
+const readline = require('readline');
 const {google} = require('googleapis');
 const moment = require('moment');
+const stripe = require("stripe")("sk_test_FuZlPuaOnR30MYPqIxK3Efs5");
 
 var app = express();
 app.use(express.static('static'));
-app.use(function(req, res, next) {
+app.all( '/', function(req, res, next) {
     if ((req.get('X-Forwarded-Proto') !== 'https')) {
         res.redirect('https://' + req.get('Host') + req.url);
     } else
@@ -20,53 +22,109 @@ const options = {
 
 const PORT = process.env.PORT || 8000;
 
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+const TOKEN_PATH = 'token.json';
 
-
-const {client_secret, client_id, redirect_uris} = JSON.parse(process.env.gapi_credentials).installed;
-const oAuth2Client = new google.auth.OAuth2(
-    client_id, client_secret, redirect_uris[0]);
-oAuth2Client.setCredentials(JSON.parse(process.env.gapi_token));
-console.log(oAuth2Client.credentials);
-google.options({
-    auth: oAuth2Client
+fs.readFile('credentials.json', (err, content) => {
+	if (err) return console.log('Error loading client secret file:', err);
+	authorize(JSON.parse(content));
 });
 
-oAuth2Client.on('tokens', (tokens) => {
-    let refresh_token = oAuth2Client.credentials.refresh_token;
-    oAuth2Client.setCredentials(tokens);
-    oAuth2Client.setCredentials({refresh_token: refresh_token});
-});
-oAuth2Client.refreshAccessToken();
+var oAuth2Client;
+/**
+ *  * Create an OAuth2 client with the given credentials, and then execute the
+ *   * given callback function.
+ *    * @param {Object} credentials The authorization client credentials.
+ *     * @param {function} callback The callback to call with the authorized client.
+ *      */
+function authorize(credentials) {
+	const {client_secret, client_id, redirect_uris} = credentials.installed;
+	oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
-const sheets = google.sheets({version: 'v4', auth: oAuth2Client});
+	  // Check if we have previously stored a token.
+	fs.readFile(TOKEN_PATH, (err, token) => {
+	       if (err) return getNewToken(oAuth2Client);
+	           oAuth2Client.setCredentials(JSON.parse(token));
+	                 });
+	                 }
+//const {client_secret, client_id, redirect_uris} = JSON.parse(process.env.gapi_credentials).installed;
+//const oAuth2Client = new google.auth.OAuth2(
+//    client_id, client_secret, redirect_uris[0]);
+//oAuth2Client.setCredentials(JSON.parse(process.env.gapi_token));
+//console.log(oAuth2Client.credentials);
+
+/**
+ *  * Get and store new token after prompting for user authorization, and then
+ *   * execute the given callback with the authorized OAuth2 client.
+ *    * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+ *     * @param {getEventsCallback} callback The callback for the authorized client.
+ *      */
+function getNewToken(oAuth2Client) {
+	  const authUrl = oAuth2Client.generateAuthUrl({
+		      access_type: 'offline',
+		      scope: SCOPES,
+		    });
+	  console.log('Authorize this app by visiting this url:', authUrl);
+	  const rl = readline.createInterface({
+		      input: process.stdin,
+		      output: process.stdout,
+		    });
+	  rl.question('Enter the code from that page here: ', (code) => {
+		      rl.close();
+		      oAuth2Client.getToken(code, (err, token) => {
+			            if (err) return console.error('Error while trying to retrieve access token', err);
+			            oAuth2Client.setCredentials(token);
+			            // Store the token to disk for later program executions
+			             fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+			                     if (err) console.error(err);
+			                             console.log('Token stored to', TOKEN_PATH);
+			                                   });
+			                                             });
+			                                               });
+			                                               }
+			      
+
 
 app.get('/', function (req, res) {
     res.render('index.html');
 });
 app.get('/times', function (req, res){
-    console.log('times requested');
+	sheets = google.sheets({version: 'v4', oAuth2Client});
     sheets.spreadsheets.values.get({
+	    auth: oAuth2Client,
         spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
-        range: 'A2:I81'
+        range: 'A2:I159'
     }, (err, data) => {
         if (err){console.log("error"); console.log(err); return;}
         const rows = data.data.values;
         const dateSet = new Set();
         if (rows.length){
-            for(let i = 0; i < rows.length; i+=27){
-                for(let j = 0; j < 26; j+=2){
+            for(let i = 0; i < rows.length; i+=53){
+                for(let j = 0; j < 52; j+=4){
                     time = rows[i+j][2];
-                    if(rows[i+j][3] !== ''){
-                        if(rows[i+j+1][3] !== '' && rows[i+j+1][3] !== undefined){
-                            continue;
-                        }
+		    for (let k = 0; k < 4; k++){
+			    if (rows[i+j+k][3] === '' || rows[i+j+k][3] === undefined){
+				dateSet.add(rows[i+j][0]+' ' +time);
+				break;
+			}
                     }
-                    dateSet.add(rows[i+j][0]+' '+time);
                 }
             }
         }
         res.send(JSON.stringify(Array.from(dateSet)));
     });
+});
+
+app.post('/checkout', function (req, res){
+
+	console.log("HE WENT TO CHECKOUT");
+	const token = req.body.stripeToken;
+	const charge = stripe.charges.create({
+		  amount: 1000,
+		  currency: 'usd',
+		  description: 'Beta Theta Pies Pizza',
+		  source: token,
+	});
 });
 
 app.post('/payments/api', function(req, res){

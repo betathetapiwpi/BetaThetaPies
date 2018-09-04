@@ -1,5 +1,14 @@
 var last = "25";
-
+var handler = StripeCheckout.configure({
+	key: 'pk_test_J4F9lMh7okJ2vEP0MKOB9ZhS',
+	  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+	  locale: 'auto',
+	  token: function(token) {
+		$.ajax({
+			url: '/checkout',
+			data
+	  }
+		  });
 
 $(document).ready(function(){
     $('#cellnumber').mask('999-999-9999');
@@ -23,8 +32,8 @@ $(document).ready(function(){
                 dates.push(new Date(newData[i]));
             }
             var timepicker = $('#timepicker').pickatime({
-                min: [19, 0],
-                max: [22, 0],
+                min: [18, 0],
+                max: [21, 0],
                 interval: 15
             }).pickatime('picker');
             var datepicker = $('#datepicker').pickadate({
@@ -54,8 +63,22 @@ $(document).ready(function(){
     $('.toppingsIcon').click(function () {
         $('img', this).toggleClass('deselected');
         $('#'+(this.id.split('-')[0])).fadeToggle(1000);
-    })
+    });
+
+   $('.stripe-button').click((e) => {
+   	handler.open({
+		name: 'Beta Theta Pi - Eta Tau',
+		description: 'Beta Theta Pie Purchase',
+		amount: 1000
+	});
+	   e.preventDefault();
+   });
+
+	window.addEventListener('popstate', () =>{
+		handler.close();
+	});
 });
+
 
 function pay() {
     const name = $('#name').val().replace(',', ' ');
