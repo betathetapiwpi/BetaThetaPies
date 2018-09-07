@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-security-policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <title> Beta Theta Pies</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css"/>
     <link rel="stylesheet" href="styles/fontawesome.min.css"/>
@@ -18,7 +19,7 @@
     <script type="text/javascript" src="js/picker/picker.js"></script>
     <script type="text/javascript" src="js/picker/picker.time.js"></script>
     <script type="text/javascript" src="js/picker/picker.date.js"></script>
-    <script type="text/javascript" src="js/checkout.min.js"></script>
+    <!--<script type="text/javascript" src="https://js.stripe.com/v3/"></script>-->
     <script type="text/javascript" src="js/pies.js"></script>
 </head>
 
@@ -37,6 +38,12 @@
 <body style="background-color: rgb(171, 202, 233)">
 <!-- call pay() in onsubmit to enable orders -->
 <form class="form-horizontal col-md-8 offset-md-2" id="orderform" onsubmit="return pay()" method="POST">
+    <div class="form-group">
+        <div class="alert alert-danger venmo-warning">
+            Venmo no longer accepts payment through their website. If you are not on
+            mobile, you will not be able to pay.
+        </div>
+    </div>
     <!-- Name -->
     <div class="form-group">
         <label class="control-label" for="name">Name</label>
@@ -152,23 +159,35 @@
         </div>
     </div>
 
-    <!-- change type to submit to enable orders -->
-    <div class="form-group">
-        <button class="btn btn-primary col-md-12 col-12 venmo-button">
-            Complete Order with Venmo Payment of $10
+    <!--&lt;!&ndash; change type to submit to enable orders &ndash;&gt;-->
+    <!--<div class="form-group">-->
+        <!--<label class="control-label" for="card-element">-->
+            <!--Credit or Debit Card-->
+        <!--</label>-->
+        <!--<div id="card-element">-->
+            <!--&lt;!&ndash; A Stripe Element will be inserted here. &ndash;&gt;-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash; Used to display form errors. &ndash;&gt;-->
+        <!--<div id="card-errors" role="alert"></div>-->
+    <!--</div>-->
+
+    <!--<button class="btn btn-primary">Submit Payment</button>-->
+
+    <label class="control-label">Send Payment and Confirm Order</label>
+    <div class="form-group payment-options">
+        <!--<div class="row justify-content-around">-->
+            <!--<button class="btn btn-light col-md-5 col-12 stripe-button">-->
+                <!--<img src="assets/stripe.svg" style="max-height: 100%">-->
+            <!--</button>-->
+
+        <button class="btn btn-light col-md-12 col-12 venmo-button disabled">
+            <img src="assets/venmo_logo_blue.svg" style="max-height: 100%">
         </button>
+        <!--</div>-->
+
     </div>
 
-    <form action="checkout" method="POST">
-      <script
-    		src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-        	data-key="pk_test_J4F9lMh7okJ2vEP0MKOB9ZhS"
-		data-amount="1000"
-		data-name="Beta Theta Pi - Eta Tau"
-		data-description="Beta Theta Pies Pizza"
-		data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-		data-locale="auto">
-	</script>
 </form>
 </body>
 </html>
