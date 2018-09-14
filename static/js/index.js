@@ -4,128 +4,47 @@ const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
 const moment = require('moment');
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const stripe = require("stripe")("sk_test_FuZlPuaOnR30MYPqIxK3Efs5");
+const { Client } = require('pg');
 
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+});
+client.connect();
 var app = express();
 app.use(express.static('static'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.all('/', function (req, res, next) {
-    if ((req.get('X-Forwarded-Proto') !== 'https')) {
-        res.redirect('https://' + req.get('Host') + req.url);
-    } else
-        next();
-});
-
-const options = {
-    cert: fs.readFileSync('./fullchain.pem'),
-    key: fs.readFileSync('./privkey.pem')
-};
 
 const PORT = process.env.PORT || 8000;
-
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
-const TOKEN_PATH = 'token.json';
-
-fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    authorize(JSON.parse(content));
-});
-
-var oAuth2Client;
-var sheets = google.sheets({version: 'v4'});
-
-/**
- *  * Create an OAuth2 client with the given credentials, and then execute the
- *   * given callback function.
- *    * @param {Object} credentials The authorization client credentials.
- *     * @param {function} callback The callback to call with the authorized client.
- *      */
-function authorize(credentials) {
-    const {client_secret, client_id, redirect_uris} = credentials.installed;
-    oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-
-    // Check if we have previously stored a token.
-    fs.readFile(TOKEN_PATH, (err, token) => {
-        if (err) return getNewToken(oAuth2Client);
-        oAuth2Client.setCredentials(JSON.parse(token));
-        oAuth2Client.refreshAccessToken();
-        console.log(oAuth2Client.credentials)
-    });
-}
-
-//const {client_secret, client_id, redirect_uris} = JSON.parse(process.env.gapi_credentials).installed;
-//const oAuth2Client = new google.auth.OAuth2(
-//    client_id, client_secret, redirect_uris[0]);
-//oAuth2Client.setCredentials(JSON.parse(process.env.gapi_token));
-//console.log(oAuth2Client.credentials);
-
-/**
- *  * Get and store new token after prompting for user authorization, and then
- *   * execute the given callback with the authorized OAuth2 client.
- *    * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- *     * @param {getEventsCallback} callback The callback for the authorized client.
- *      */
-function getNewToken(oAuth2Client) {
-    const authUrl = oAuth2Client.generateAuthUrl({
-        scope: SCOPES,
-    });
-    console.log('Authorize this app by visiting this url:', authUrl);
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    rl.question('Enter the code from that page here: ', (code) => {
-        rl.close();
-        oAuth2Client.getToken(code, (err, token) => {
-            if (err) return console.error('Error while trying to retrieve access token', err);
-            oAuth2Client.setCredentials(token);
-            // Store the token to disk for later program executions
-            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-                if (err) console.error(err);
-                console.log('Token stored to', TOKEN_PATH);
-            });
-        });
-    });
-}
 
 
 app.get('/', function (req, res) {
     res.render('index.html');
 });
 app.get('/times', function (req, res) {
-    sheets.spreadsheets.values.get({
-        auth: oAuth2Client,
-        spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
-        range: 'A2:D159'
-    }, (err, data) => {
-        if (err) {
-            console.log("error");
-            console.log(err);
-            return;
+    let times = [];
+    client.query("select date || ' ' || time as datetime from orders where name='' group by date, time order by date, time;", (err, res_) => {
+        if (err) throw err;
+        for (let row of res_.rows) {
+            console.log(row.datetime);
+            times.push(new Date(row.datetime));
         }
-        const rows = data.data.values;
-        const dateSet = new Set();
-        if (rows.length) {
-            for (let i = 0; i < rows.length; i += 53) {
-                for (let j = 0; j < 52; j += 4) {
-                    time = rows[i + j][2];
-                    for (let k = 0; k < 4; k++) {
-                        if (rows[i + j + k][3] === '' || rows[i + j + k][3] === undefined) {
-			    let d = new Date(rows[i+j][0] + ' ' + time);
-			    d.setHours(d.getHours() - 3);
-			    if (d < new Date()){ continue;}
-                            dateSet.add(rows[i + j][0] + ' ' + time);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        res.send(JSON.stringify(Array.from(dateSet)));
+
+        console.log(JSON.stringify(times));
+        res.send(JSON.stringify(times));
     });
+});
+
+app.post('/submit', function (req, res) {
+    console.log(req);
+    const name = req.body.name;
+    const address = req.body.address;
+    const phone = req.body.cellnumber;
+    const toppings = req.body.toppings;
 });
 
 app.post('/checkout', function (req, res) {
@@ -176,43 +95,11 @@ function add_order(order) {
     const time = order[5];
     const notes = order[6];
     const meth = order[7];
-    sheets.spreadsheets.values.get({
-        auth: oAuth2Client,
-        spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
-        range: 'A2:I159',
-    }, (err, res) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        const rows = res.data.values;
-        if (rows.length) {
-            for (let i = 0; i < rows.length; i+=53) {
-                if (rows[i][0].includes(date)) {
-                    for (let j = 0; j < 52; j += 4) {
-                        if (rows[i + j][2].includes(time)) {
-                            for (let k = 0; k < 4; k++) {
-                                if (rows[i + j + k][3] === '' || rows[i + j + k][3] === undefined) {
-                                    sheets.spreadsheets.values.update({
-                                        auth: oAuth2Client,
-                                        spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
-                                        range: 'D' + (i + j + k + 2) + ':I' + (i + j + k + 2),
-                                        valueInputOption: 'USER_ENTERED',
-                                        resource: {"values": [[name, cellnumber, addr, toppings, notes, meth]]}
-                                    });
-					console.log("ordered");
-                                    return;
-                                }
-                                console.log("overbook", order);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    });
+    client.connect();
+    client.query("UPDATE order set name = $1 address=$2 phone=$3 toppings=$4 notes=$5 paidwith=$6 where id = " +
+        "(Select id from orders where date='$7' and time='$8' and name = '' limit 1)",
+        name, addr, cellnumber, toppings, notes, meth, date, time);
 }
 
 console.log("Ready");
 app.listen(PORT);
-https.createServer(options, app).listen(8443);

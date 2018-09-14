@@ -55,6 +55,7 @@ $(document).ready(function () {
         success: function (data) {
             var dates = [];
             newData = JSON.parse(data);
+            console.log(newData);
             dates.push(true);
             for (let i = 0; i < newData.length - 1; i++) {
                 dates.push(new Date(newData[i]));
@@ -121,7 +122,26 @@ $(document).ready(function () {
 
 
 function pay() {
-    window.open('https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO' + generateNote() + '&amount=10', '_blank');
+    const date = $('#datepicker').pickadate('picker').get('select', 'yyyy-m-d');
+    const time = $('#timepicker').pickatime('picker').get('select', 'H:i');
+    $.ajax({
+        url: '/times',
+        type: 'GET',
+        error: function () {
+
+        },
+        success: function (data) {
+            newData = JSON.parse(data);
+            for (let datetime of newData){
+                if (datetime === date + ' ' + time){
+                    window.open('https://venmo.com/BetaThetaPi-WPI?txn=pay&note=BTPOO' + generateNote() + '&amount=10', '_blank');;
+                }
+            }
+            return false;
+        },
+        timeout: 10000
+    });
+
 }
 
 function generateNote() {
