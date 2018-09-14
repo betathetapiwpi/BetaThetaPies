@@ -83,7 +83,7 @@ $(document).ready(function () {
             datepicker.set('select', dates[1]);
             timepicker.on({
                 set: (thing) => {
-                    $('.venmo-button').removeClass('disabled');
+                    $('.venmo-button').removeAttr('disabled');
                 }
 
             })

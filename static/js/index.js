@@ -101,7 +101,6 @@ app.get('/times', function (req, res) {
         spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
         range: 'A2:D159'
     }, (err, data) => {
-        console.log('parsing');
         if (err) {
             console.log("error");
             console.log(err);
@@ -115,6 +114,9 @@ app.get('/times', function (req, res) {
                     time = rows[i + j][2];
                     for (let k = 0; k < 4; k++) {
                         if (rows[i + j + k][3] === '' || rows[i + j + k][3] === undefined) {
+			    let d = new Date(rows[i+j][0] + ' ' + time);
+			    d.setHours(d.getHours() - 3);
+			    if (d < new Date()){ continue;}
                             dateSet.add(rows[i + j][0] + ' ' + time);
                             break;
                         }
@@ -139,9 +141,10 @@ app.post('/checkout', function (req, res) {
     add_order(note.split(',') + ['Stripe']);
 });
 
-app.post('/payments/api', function (req, res) {
-    let data = JSON.parse(req.body);
+app.post('/api/purchase', function (req, res) {
+    let data = req.body;
     let note = data.data.note;
+	console.log(note);
     let amount = data.data.amount;
     let settled = data.data.status === 'settled';
 
@@ -150,20 +153,21 @@ app.post('/payments/api', function (req, res) {
         res.sendStatus(200);
     }
 
-    if (!settled || amount < 10 && data.data.actor.username !== 'Tim-Winters-007') {
+    if (!settled || (amount < 10 && data.data.actor.username !== 'Tim-Winters-007')) {
         console.log("Either not settled or too little amount");
         res.sendStatus(200);
     }
 
     const order = note.substring(5).split(',');
 
-    add_order(order + ['Venmo']);
+    add_order(order.concat(['Venmo']));
     res.status(200);
     res.send();
 });
 
 
 function add_order(order) {
+    console.log(order);
     const name = order[0];
     const addr = order[1];
     const cellnumber = order[2];
@@ -183,14 +187,12 @@ function add_order(order) {
         }
         const rows = res.data.values;
         if (rows.length) {
-            for (let i = 0; i < rows.length; i++) {
-                console.log(rows[i][0]);
+            for (let i = 0; i < rows.length; i+=53) {
                 if (rows[i][0].includes(date)) {
                     for (let j = 0; j < 52; j += 4) {
                         if (rows[i + j][2].includes(time)) {
                             for (let k = 0; k < 4; k++) {
                                 if (rows[i + j + k][3] === '' || rows[i + j + k][3] === undefined) {
-                                    console.log(rows[i + j + k][3]);
                                     sheets.spreadsheets.values.update({
                                         auth: oAuth2Client,
                                         spreadsheetId: '1Lq3agSSEOv_OKVymELTnvH1Rj9we0GkZS8bvNWjRoiA',
@@ -198,6 +200,7 @@ function add_order(order) {
                                         valueInputOption: 'USER_ENTERED',
                                         resource: {"values": [[name, cellnumber, addr, toppings, notes, meth]]}
                                     });
+					console.log("ordered");
                                     return;
                                 }
                                 console.log("overbook", order);

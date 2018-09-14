@@ -51,7 +51,14 @@ html, body {
     color: rgb(171, 35, 40);
     text-align: center;
     word-wrap: break-word;
+}
+
+.jumbotron p:last-child{
     margin: 0 auto;
+}
+
+.jumbotron a{
+    color: #ffffff;
 }
 
 .jumbotron img{
@@ -78,10 +85,13 @@ html, body {
     }
     #toppings {
         justify-content: center;
-        max-height: 20vh;
     }
     #toppings {
         height: 100%;
+    }
+
+    .snapchat-warning {
+	    display: inline-block !important;
     }
 
 }
@@ -140,7 +150,6 @@ html, body {
 
 #orderform {
     padding: 10px;
-    margin-bottom: 50px;
 }
 
 #crust {
@@ -226,7 +235,8 @@ html, body {
     transition: all 1s ease;
 }
 #toppings img{
-    transition: all 1s ease;
+    height: 75%;
+	transition: all 1s ease;
 }
 
 #toppings .deselected{
