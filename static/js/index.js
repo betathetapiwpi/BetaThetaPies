@@ -30,21 +30,31 @@ app.get('/times', function (req, res) {
     client.query("select date || ' ' || time as datetime from orders where name='' group by date, time order by date, time;", (err, res_) => {
         if (err) throw err;
         for (let row of res_.rows) {
-            console.log(row.datetime);
             times.push(new Date(row.datetime));
         }
-
-        console.log(JSON.stringify(times));
         res.send(JSON.stringify(times));
     });
 });
 
 app.post('/submit', function (req, res) {
-    console.log(req);
-    const name = req.body.name;
-    const address = req.body.address;
-    const phone = req.body.cellnumber;
-    const toppings = req.body.toppings;
+    let body = req.body;
+    const date = body.date;
+    const time = body.time;
+    const name = body.name;
+    const address = body.address;
+    const phone = body.cellnumber;
+    const toppings = [body.sauce,
+        body.cheese,
+        body.pepperoni,
+        body.bacon,
+        body.onion,
+        body['green pepper'],
+        body.sausage,
+        body.mushroom].join('/');
+    const notes = body.notes;
+    const finalNote = [date, time, name, address, phone, toppings, notes].join();
+    return res.redirect("venmo://paycharge?txn=pay&recipients=BetaThetaPi-WPI&amount=10&note=BTPOO" + finalNote);
+
 });
 
 app.post('/checkout', function (req, res) {
@@ -56,15 +66,14 @@ app.post('/checkout', function (req, res) {
         description: 'Beta Theta Pies Pizza',
         source: token
     });
-    console.log(note.split(','));
     add_order(note.split(',') + ['Stripe']);
 });
 
 app.post('/api/purchase', function (req, res) {
     let data = req.body;
     let note = data.data.note;
-	console.log(note);
     let amount = data.data.amount;
+    console.log(note);
     let settled = data.data.status === 'settled';
 
     if (!note.startsWith('BTPOO')) {
@@ -72,21 +81,22 @@ app.post('/api/purchase', function (req, res) {
         res.sendStatus(200);
     }
 
-    if (!settled || (amount < 10 && data.data.actor.username !== 'Tim-Winters-007')) {
-        console.log("Either not settled or too little amount");
-        res.sendStatus(200);
-    }
-
     const order = note.substring(5).split(',');
 
-    add_order(order.concat(['Venmo']));
+    if (!settled || (amount < 10 && data.data.actor.username !== 'Tim-Winters-007')) {
+        order.concat(['Venmo: Only paid ' + amount]);
+    }
+    else{
+        order.concat('Venmo');
+    }
+
+    add_order(order);
     res.status(200);
     res.send();
 });
 
 
 function add_order(order) {
-    console.log(order);
     const name = order[0];
     const addr = order[1];
     const cellnumber = order[2];

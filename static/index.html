@@ -37,46 +37,49 @@
     </div>
 </div>
 <body style="background-color: rgb(171, 202, 233)">
+<div class="col-md-8 offset-md-2">
+    <div class="alert alert-danger venmo-warning">
+        Venmo no longer accepts payment through their website. If you are not on
+        mobile, you will not be able to pay.
+    </div>
+</div>
+<div class="col-md-8 offset-md-2">
+    <div class="alert alert-warning snapchat-warning" style="display: none">
+        If you are viewing this in Snapchat, please open in your device's browser to enable proper submission.
+    </div>
+</div>
 <!-- call pay() in onsubmit to enable orders -->
 <form class="form-horizontal col-md-8 offset-md-2" id="orderform" action="/submit" method="POST">
-    <div class="form-group">
-        <div class="alert alert-danger venmo-warning">
-            Venmo no longer accepts payment through their website. If you are not on
-            mobile, you will not be able to pay.
-        </div>
-    </div>
-    <div class="form-group">
-	    <div class="alert alert-warning snapchat-warning" style="display: none">
-		    If you are viewing this in Snapchat, please open in your device's browser to enable proper submission.
-	    </div>
-    </div>
+
     <!-- Name -->
     <div class="form-group">
         <label class="control-label" for="name">Name</label>
-        <div>
-            <input id="name" type="text" placeholder="John Reily Knox" class="form-control input-md" required>
-        </div>
+        <input id="name" name="name" type="text" placeholder="John Reily Knox" class="form-control input-md" required>
     </div>
     <!-- Address -->
     <div class="form-group">
         <label class="control-label" for="address">Delivery Location</label>
-        <div>
-            <input id="address" type="text" class="form-control input-md" placeholder="1200 Park Ave, Emeryville, CA" required>
-        </div>
+        <input id="address" name="address" type="text" class="form-control input-md" placeholder="1200 Park Ave, Emeryville, CA" required>
     </div>
 
     <!-- Phone Number -->
     <div class="form-group">
         <label class="control-label" for="cellnumber">Phone Number</label>
-        <div>
-            <input id="cellnumber" class="form-control" placeholder="508-831-5200" type='tel'
-                   pattern="\d{3}[\-]\d{3}[\-]\d{4}"
-                   oninvalid="this.setCustomValidity('Enter a 10 digit phone number')"
-                   oninput="setCustomValidity('')" required>
-        </div>
+        <input id="cellnumber" name="cellnumber" class="form-control" placeholder="508-831-5200" type='tel'
+               pattern="\d{3}[\-]\d{3}[\-]\d{4}"
+               oninvalid="this.setCustomValidity('Enter a 10 digit phone number')"
+               oninput="setCustomValidity('')" required>
     </div>
     <!-- Pizza Maker -->
     <div class="form-group">
+        <input type="hidden" id="sauce_input" name="sauce" value="sauce">
+        <input type="hidden" id="cheese_input" name="cheese" value="cheese">
+        <input type="hidden" id="pepperoni_input" name="pepperoni" value="">
+        <input type="hidden" id="bacon_input" name="bacon" value="">
+        <input type="hidden" id="onion_input" name="onion" value="">
+        <input type="hidden" id="greenpepper_input" name="green pepper" value="">
+        <input type="hidden" id="sausage_input" name="sausage" value="">
+        <input type="hidden" id="mushroom_input" name="mushroom" value="">
         <div class="row" id="pizzamaker">
             <div class="col-md-6 col-12" id="pizza">
                 <div id="crust">
@@ -140,11 +143,11 @@
     <div class="form-group row">
         <div class="col-md-6 col-6">
             <label for="datepicker" class="control-label">Delivery Date</label>
-            <input id="datepicker" class="form-control col-12 col-md-12" type="text">
+            <input id="datepicker" name="date" class="form-control col-12 col-md-12" type="text">
         </div>
         <div class="col-md-6 col-6">
             <label for="timepicker" class="control-label">Delivery Time</label>
-            <input id="timepicker" class="form-control col-12 col-md-12" type="text">
+            <input id="timepicker" name="time" class="form-control col-12 col-md-12" type="text">
         </div>
     </div>
 
@@ -161,7 +164,7 @@
         <label class="control-label" for="comments">Comments</label>
         <div>
                 <textarea id="comments" rows="2" placeholder="Any special requests or deathly allergies?"
-                          class="form-control input-md"></textarea>
+                          name="notes" class="form-control input-md"></textarea>
         </div>
     </div>
 

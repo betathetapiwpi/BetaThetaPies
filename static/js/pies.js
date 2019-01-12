@@ -43,7 +43,7 @@ $(document).ready(function () {
         error: function () {
             $('#datepicker').pickadate({
                 min: [2018, 8, 13],
-                max: [2018, 8, 15]
+                max: [2018, 8, 15],
             }).pickadate('picker').set({disable: true});
             $('#timepicker').pickatime({
                 min: [18, 0],
@@ -63,13 +63,14 @@ $(document).ready(function () {
             var timepicker = $('#timepicker').pickatime({
                 min: [18, 0],
                 max: [21, 0],
-                interval: 15
+                interval: 15,
+                formatSubmit: "HH:i"
             }).pickatime('picker');
             var datepicker = $('#datepicker').pickadate({
                 min: dates[1],
                 max: dates[dates.length - 1],
                 disable: dates,
-                formatSubmit: "m/d/yyyy",
+                formatSubmit: "yyyy-mm-dd",
                 hiddenName: true,
                 format: "mmm d",
                 onSet: function (thingset) {
@@ -97,6 +98,13 @@ $(document).ready(function () {
     $('.toppingsIcon').click(function () {
         $('img', this).toggleClass('deselected');
         $('#' + (this.id.split('-')[0])).fadeToggle(1000);
+        const toppingHiddenInput = $('#' + (this.id.split('-')[0] + '_input'));
+        console.log(toppingHiddenInput);
+        if (toppingHiddenInput.val() === "")
+            toppingHiddenInput.val(this.id.split('-')[0]);
+        else{
+            toppingHiddenInput.val("")
+        }
     });
 
     // $('.stripe-button').click((e) => {
