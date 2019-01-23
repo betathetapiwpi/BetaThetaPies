@@ -1,9 +1,5 @@
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
-const readline = require('readline');
-const {google} = require('googleapis');
-const moment = require('moment');
+const path = require('path');
 const bodyParser = require("body-parser");
 const stripe = require("stripe")("sk_test_FuZlPuaOnR30MYPqIxK3Efs5");
 const { Client } = require('pg');
@@ -25,6 +21,23 @@ const PORT = process.env.PORT || 8000;
 app.get('/', function (req, res) {
     res.render('index.html');
 });
+
+app.get('/orders', function (req, res) {
+    res.render('orders.html');
+});
+
+app.get('/orders/orders', function (req, res) {
+    let orders = [];
+    client.query("select date, time, name, address, phone, topping, notes from orders order by id", (err, res_) => {
+        if (err) throw err;
+        for (let row of res_.rows) {
+            orders.push(row);
+        }
+        res.send(JSON.stringify(orders));
+    });
+
+});
+
 app.get('/times', function (req, res) {
     let times = [];
     client.query("select date || ' ' || time as datetime from orders where name='' group by date, time order by date, time;", (err, res_) => {

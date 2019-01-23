@@ -2,9 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-security-policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href=https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css>
+    <script>
+
+        $(document).ready(function() {
+            console.log("HELLO");
+            $.ajax({
+                url: '/orders/orders',
+                type: 'GET',
+                success: function (data) {
+                    let orders = JSON.parse(data);
+                    let results = [];
+                    console.log(results)
+                    $('#orders').DataTable( {
+                        data: results,
+                        columns:[
+                            { title: "date" },
+                            { title: "time" },
+                            { title: "name" },
+                            { title: "address" },
+                            { title: "phone" },
+                            { title: "topping" },
+                            { title: "notes" }
+                        ]
+                    } );
+                }
+            });
+        });
+    </script>
+    <title>BTPies Orders</title>
 </head>
 <body>
-
+<table id="orders" class="display" width="100%"></table>
 </body>
+
 </html>
