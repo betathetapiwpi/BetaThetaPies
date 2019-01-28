@@ -105,6 +105,7 @@ app.post('/submit', function (req, res) {
             if (res_) {
                 console.log('Adding cash order');
                 add_order([name, address, phone, toppings, date, time, notes, 'cash']);
+                res.sendView('index.html');
             } else {
                 res.send('<script>alert("Incorrect Password. Order did not go through.")</script>');
             }
