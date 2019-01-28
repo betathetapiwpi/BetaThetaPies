@@ -64,7 +64,8 @@ $(document).ready(function () {
                 min: [18, 0],
                 max: [21, 0],
                 interval: 15,
-                formatSubmit: "HH:i"
+                formatSubmit: 'HH:i',
+                hiddenName: true
             }).pickatime('picker');
             var datepicker = $('#datepicker').pickadate({
                 min: dates[1],
