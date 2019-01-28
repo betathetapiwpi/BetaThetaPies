@@ -182,7 +182,7 @@ function add_order(order) {
     const notes = order[6];
     const meth = order[7];
     client.query("UPDATE orders set name = $1, address=$2, phone=$3, toppings=$4, notes=$5, paidwith=$6 where id = " +
-        "(Select id from orders where date= $7 and time= $8 and name = '' limit 1)",
+        "(Select id from orders where date= $7 and time= $8 and name = '' order by id limit 1)",
         [name, addr, cellnumber, toppings, notes, meth, date, time], (err, res) => {
             if (err) {
                 console.log(err);
