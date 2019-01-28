@@ -113,11 +113,11 @@ app.post('/submit', function (req, res) {
         });
     } else {
         let body = req.body;
-        const date = body.date;
-        const time = body.time;
-        const name = body.name;
-        const address = body.address;
-        const phone = body.cellnumber;
+        const date = body.date.replace('/,/g', '');
+        const time = body.time.replace('/,/g', '');
+        const name = body.name.replace('/,/g', '');
+        const address = body.address.replace('/,/g', '');
+        const phone = body.cellnumber.replace('/,/g', '');
         const toppings = [body.sauce,
             body.cheese,
             body.pepperoni,
@@ -125,7 +125,7 @@ app.post('/submit', function (req, res) {
             body.onion,
             body['green pepper'],
             body.sausage,
-            body.mushroom].filter(Boolean).join('/');
+            body.mushroom].filter(Boolean).join('/').replace('/,/g', '');
         const notes = body.notes;
         const finalNote = [date, time, name, address, phone, toppings, notes].join();
         return res.redirect("venmo://paycharge?txn=pay&recipients=BetaThetaPi-WPI&amount=10&note=BTPOO" + finalNote);
@@ -173,12 +173,12 @@ app.all('*', function (req, res) {
 
 function add_order(order) {
     console.log('adding order');
-    const name = order[0];
-    const addr = order[1];
-    const cellnumber = order[2];
-    const toppings = order[3];
-    const date = order[4];
-    const time = order[5];
+    const date = order[0];
+    const time = order[1];
+    const name = order[2];
+    const addr = order[3];
+    const cellnumber = order[4];
+    const toppings = order[5];
     const notes = order[6];
     const meth = order[7];
     client.query("UPDATE orders set name = $1, address=$2, phone=$3, toppings=$4, notes=$5, paidwith=$6 where id = " +
