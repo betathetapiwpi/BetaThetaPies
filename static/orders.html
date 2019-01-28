@@ -2,9 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-security-policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css"/>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/orders/orders',
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    let orders = JSON.parse(data);
+                    orders = Object.values(orders);
+                    let results = [];
+                    orders.forEach(function (arrayItem) {
+                        arrayItem.date = new Date(arrayItem.date).toLocaleDateString("en-US");
+                        results.push(Object.values(arrayItem))
+                    });
+                    $('#orders').DataTable({
+                        rowCallback: function (row, data, index){
+                            console.log(row);
+                            if (data[7] === 'fruit') {
+                                $(row).css('background', 'rgb(249,159,201)');
+                            }
+                            else{
+                                $(row).css('background', 'rgb(171,202,233)');
+                            }
+                        },
+                        data: results,
+                        columns: [
+                            {title: "date"},
+                            {title: "time"},
+                            {title: "name"},
+                            {title: "address"},
+                            {title: "phone"},
+                            {title: "topping"},
+                            {title: "notes"},
+                            {title: "house"}
+                        ]
+                    });
+                }
+            });
+        });
+    </script>
+    <title>BTPies Orders</title>
 </head>
 <body>
-
+<table id="orders" class="table table-striped table-bordered" style="width: 100%"></table>
 </body>
+
 </html>

@@ -76,6 +76,7 @@ $(document).ready(function () {
                 onSet: function (thingset) {
                     timepicker.set('disable', false);
                     var selectedDayTimes = JSON.parse(data).filter(date => new Date(date).getDate() === new Date(thingset.select).getDate());
+                    console.log(selectedDayTimes);
                     selectedDayTimes = selectedDayTimes.map((date, index, array) => [new Date(date).getHours(), new Date(date).getMinutes()]);
                     selectedDayTimes.unshift(true);
                     timepicker.set('disable', selectedDayTimes);
@@ -126,6 +127,7 @@ $(document).ready(function () {
     // window.addEventListener('popstate', () => {
     //     handler.close();
     // });
+
 });
 
 
