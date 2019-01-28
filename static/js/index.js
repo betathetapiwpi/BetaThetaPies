@@ -104,8 +104,8 @@ app.post('/submit', function (req, res) {
         bcrypt.compare(password, hash, function (err, res_) {
             if (res_) {
                 console.log('Adding cash order');
-                add_order([name, address, phone, toppings, date, time, notes, 'cash']);
-                res.sendView('index.html');
+                add_order([date, time, name, address, phone, toppings, notes, 'cash']);
+                res.redirect(req.headers.referer);
             } else {
                 res.send('<script>alert("Incorrect Password. Order did not go through.")</script>');
             }
@@ -173,6 +173,7 @@ app.all('*', function (req, res) {
 
 function add_order(order) {
     console.log('adding order');
+    console.log(order);
     const date = order[0];
     const time = order[1];
     const name = order[2];
@@ -181,8 +182,8 @@ function add_order(order) {
     const toppings = order[5];
     const notes = order[6];
     const meth = order[7];
-    client.query("UPDATE orders set name = $1, address=$2, phone=$3, toppings=$4, notes=$5, paidwith=$6 where id = " +
-        "(Select id from orders where date= $7 and time= $8 and name = '' order by id limit 1)",
+    client.query("UPDATE orders set name = $1, address=$2, phone=$3, toppings= $4, notes= $5, paidwith= $6 where id = " +
+        "(Select id from orders where date = $7 and time = $8 and name = '' order by id limit 1)",
         [name, addr, cellnumber, toppings, notes, meth, date, time], (err, res) => {
             if (err) {
                 console.log(err);
