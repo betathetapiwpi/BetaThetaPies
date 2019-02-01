@@ -70,7 +70,9 @@ app.get('/orders/orders', function (req, res) {
 
 app.get('/times', function (req, res) {
     let times = [];
-    client.query("select date || ' ' || time as datetime from orders where name='' and (date + time)::timestamp > now() + '2 hour'::interval  group by date, time order by date, time;", (err, res_) => {
+    client.query("select date || ' ' || time as datetime from orders where name='' and (date + time)::timestamp " +
+        "> now() + '2 hour'::interval and (date + TO_TIMESTAMP('17:00', 'HH24:MI')::time)::timestamp > now() group by" +
+        " date, time order by date, time;", (err, res_) => {
         if (err) throw err;
         for (let row of res_.rows) {
             times.push(new Date(row.datetime));
